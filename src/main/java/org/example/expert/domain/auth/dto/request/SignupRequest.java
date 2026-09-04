@@ -19,4 +19,24 @@ public class SignupRequest {
     private String nickname;
     @NotBlank
     private String userRole;
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String email;
+        private String password;
+        private String nickname;
+        private String userRole;
+
+        public Builder email(String email) { this.email = email; return this; }
+        public Builder password(String password) { this.password = password; return this; }
+        public Builder nickname(String nickname) { this.nickname = nickname; return this; }
+        public Builder userRole(String userRole) { this.userRole = userRole; return this; }
+
+        public SignupRequest build() {
+            return new SignupRequest(email, password, nickname, userRole);
+        }
+    }
 }

@@ -47,18 +47,18 @@ class TodoControllerTest {
         // given
         long todoId = 1L;
         String title = "title";
-        AuthUser authUser = new AuthUser(1L, "email", "nickname", UserRole.USER);
+        AuthUser authUser = AuthUser.builder().id(1L).email("email").nickname("nickname").userRole(UserRole.USER).build();
         User user = User.fromAuthUser(authUser);
-        UserResponse userResponse = new UserResponse(user.getId(), user.getEmail());
-        TodoResponse response = new TodoResponse(
-                todoId,
-                title,
-                "contents",
-                "Sunny",
-                userResponse,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+        UserResponse userResponse = UserResponse.builder().id(user.getId()).email(user.getEmail()).build();
+        TodoResponse response = TodoResponse.builder()
+                .id(todoId)
+                .title(title)
+                .contents("contents")
+                .weather("Sunny")
+                .user(userResponse)
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now())
+                .build();
 
         // when
         when(todoService.getTodo(todoId)).thenReturn(response);
@@ -92,7 +92,7 @@ class TodoControllerTest {
     void searchTodos_success() throws Exception {
         // given
         List<TodoSearchResponse> content = List.of(
-                new TodoSearchResponse("제목 테스트", 2L, 4L)
+                TodoSearchResponse.builder().title("제목 테스트").managerCount(2L).commentCount(4L).build()
         );
         Page<TodoSearchResponse> responsePage = new PageImpl<>(content, PageRequest.of(0, 10), 1);
 

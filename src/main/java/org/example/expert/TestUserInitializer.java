@@ -25,6 +25,11 @@ public class TestUserInitializer implements CommandLineRunner {
         if (userRepository.existsByEmail(email)) {
             return;
         }
-        userRepository.save(new User(email, passwordEncoder.encode("password123"), nickname, UserRole.USER));
+        userRepository.save(User.builder()
+                .email(email)
+                .password(passwordEncoder.encode("password123"))
+                .nickname(nickname)
+                .userRole(UserRole.USER)
+                .build());
     }
 }

@@ -2,13 +2,11 @@ package org.example.expert.domain.manager.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.user.entity.User;
 
 @Getter
 @Entity
-@NoArgsConstructor
 @Table(name = "managers")
 public class Manager {
 
@@ -22,8 +20,27 @@ public class Manager {
     @JoinColumn(name = "todo_id", nullable = false)
     private Todo todo;
 
-    public Manager(User user, Todo todo) {
-        this.user = user;
-        this.todo = todo;
+    protected Manager() {
+    }
+
+    private Manager(Builder builder) {
+        this.user = builder.user;
+        this.todo = builder.todo;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private User user;
+        private Todo todo;
+
+        public Builder user(User user) { this.user = user; return this; }
+        public Builder todo(Todo todo) { this.todo = todo; return this; }
+
+        public Manager build() {
+            return new Manager(this);
+        }
     }
 }

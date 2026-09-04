@@ -35,15 +35,19 @@ public class ChatController {
             .findById(dto.getRoomId())
             .orElseThrow();
 
-        ChatMessage message = new ChatMessage(sender, room, dto.getContent());
+        ChatMessage message = ChatMessage.builder()
+                .sender(sender)
+                .chatRoom(room)
+                .content(dto.getContent())
+                .build();
         chatMessageRepository.save(message);
 
-        RedisChatMessage redisMessage = new RedisChatMessage(
-            message.getChatRoom().getId(),
-            message.getSender().getId(),
-            message.getSender().getNickname(),
-            message.getContent()
-        );
+        RedisChatMessage redisMessage = RedisChatMessage.builder()
+                .roomId(message.getChatRoom().getId())
+                .senderId(message.getSender().getId())
+                .senderName(message.getSender().getNickname())
+                .content(message.getContent())
+                .build();
 
         chatRedisPublisher.publish(room.getId(), redisMessage);
 

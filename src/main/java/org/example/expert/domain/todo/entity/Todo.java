@@ -2,7 +2,6 @@ package org.example.expert.domain.todo.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.example.expert.domain.comment.entity.Comment;
 import org.example.expert.domain.common.entity.Timestamped;
 import org.example.expert.domain.manager.entity.Manager;
@@ -13,7 +12,6 @@ import java.util.List;
 
 @Getter
 @Entity
-@NoArgsConstructor
 @Table(name = "todos")
 public class Todo extends Timestamped {
 
@@ -33,11 +31,34 @@ public class Todo extends Timestamped {
     @OneToMany(mappedBy = "todo", cascade = CascadeType.PERSIST)
     private List<Manager> managers = new ArrayList<>();
 
-    public Todo(String title, String contents, String weather, User user) {
-        this.title = title;
-        this.contents = contents;
-        this.weather = weather;
-        this.user = user;
-        this.managers.add(new Manager(user, this));
+    protected Todo() {
+    }
+
+    private Todo(Builder builder) {
+        this.title = builder.title;
+        this.contents = builder.contents;
+        this.weather = builder.weather;
+        this.user = builder.user;
+        this.managers.add(Manager.builder().user(builder.user).todo(this).build());
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String title;
+        private String contents;
+        private String weather;
+        private User user;
+
+        public Builder title(String title) { this.title = title; return this; }
+        public Builder contents(String contents) { this.contents = contents; return this; }
+        public Builder weather(String weather) { this.weather = weather; return this; }
+        public Builder user(User user) { this.user = user; return this; }
+
+        public Todo build() {
+            return new Todo(this);
+        }
     }
 }

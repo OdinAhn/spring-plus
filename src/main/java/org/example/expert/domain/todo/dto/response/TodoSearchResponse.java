@@ -9,9 +9,27 @@ public class TodoSearchResponse {
     private final Long managerCount;
     private final Long commentCount;
 
-    public TodoSearchResponse(String title, Long managerCount, Long commentCount) {
-        this.title = title;
-        this.managerCount = managerCount;
-        this.commentCount = commentCount;
+    private TodoSearchResponse(Builder builder) {
+        this.title = builder.title;
+        this.managerCount = builder.managerCount;
+        this.commentCount = builder.commentCount;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String title;
+        private Long managerCount;
+        private Long commentCount;
+
+        public Builder title(String title) { this.title = title; return this; }
+        public Builder managerCount(Long managerCount) { this.managerCount = managerCount; return this; }
+        public Builder commentCount(Long commentCount) { this.commentCount = commentCount; return this; }
+
+        public TodoSearchResponse build() {
+            return new TodoSearchResponse(this);
+        }
     }
 }

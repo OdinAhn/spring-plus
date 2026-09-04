@@ -5,13 +5,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
 public class ChatRoom {
 
     @Id
@@ -22,8 +20,25 @@ public class ChatRoom {
 
     private LocalDateTime createdAt;
 
-    public ChatRoom(String name) {
-        this.name = name;
+    protected ChatRoom() {
+    }
+
+    private ChatRoom(Builder builder) {
+        this.name = builder.name;
         this.createdAt = LocalDateTime.now();
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String name;
+
+        public Builder name(String name) { this.name = name; return this; }
+
+        public ChatRoom build() {
+            return new ChatRoom(this);
+        }
     }
 }

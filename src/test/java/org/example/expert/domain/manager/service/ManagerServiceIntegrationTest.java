@@ -53,12 +53,12 @@ class ManagerServiceIntegrationTest {
     @DisplayName("매니저 등록 실패 시 - 매니저는 롤백되지만 로그는 DB에 저장된다")
     void saveManager_fail_but_log_saved() {
         // given
-        User author = userRepository.save(new User("author@test.com", "password", "author", UserRole.USER));
-        Todo todo = todoRepository.save(new Todo("테스트 일정", "내용", "맑음", author));
+        User author = userRepository.save(User.builder().email("author@test.com").password("password").nickname("author").userRole(UserRole.USER).build());
+        Todo todo = todoRepository.save(Todo.builder().title("테스트 일정").contents("내용").weather("맑음").user(author).build());
 
         // 예외 유발 조건: 작성자 본인을 담당자로 등록 시도 (InvalidRequestException 발생)
-        AuthUser authUser = new AuthUser(author.getId(), author.getEmail(), author.getNickname(), UserRole.USER);
-        ManagerSaveRequest request = new ManagerSaveRequest(author.getId());
+        AuthUser authUser = AuthUser.builder().id(author.getId()).email(author.getEmail()).nickname(author.getNickname()).userRole(UserRole.USER).build();
+        ManagerSaveRequest request = ManagerSaveRequest.builder().managerUserId(author.getId()).build();
 
         // Todo 생성 시 작성자 본인이 매니저로 함께 등록되므로(Todo 생성자 참고), 등록 시도 전 개수를 기준으로 비교한다
         long managerCountBeforeAttempt = managerRepository.count();
@@ -90,12 +90,12 @@ class ManagerServiceIntegrationTest {
     @DisplayName("존재하지 않는 유저로 매니저 등록 실패 시 - 실패 로그가 정상 기록된다")
     void saveManager_userNotFound_fail_but_log_saved() {
         // given
-        User author = userRepository.save(new User("author@test.com", "password", "author", UserRole.USER));
-        Todo todo = todoRepository.save(new Todo("테스트 일정", "내용", "맑음", author));
+        User author = userRepository.save(User.builder().email("author@test.com").password("password").nickname("author").userRole(UserRole.USER).build());
+        Todo todo = todoRepository.save(Todo.builder().title("테스트 일정").contents("내용").weather("맑음").user(author).build());
 
-        AuthUser authUser = new AuthUser(author.getId(), author.getEmail(), author.getNickname(), UserRole.USER);
+        AuthUser authUser = AuthUser.builder().id(author.getId()).email(author.getEmail()).nickname(author.getNickname()).userRole(UserRole.USER).build();
         long nonExistentUserId = 999999L;
-        ManagerSaveRequest request = new ManagerSaveRequest(nonExistentUserId);
+        ManagerSaveRequest request = ManagerSaveRequest.builder().managerUserId(nonExistentUserId).build();
 
         // Todo 생성 시 작성자 본인이 매니저로 함께 등록되므로(Todo 생성자 참고), 등록 시도 전 개수를 기준으로 비교한다
         long managerCountBeforeAttempt = managerRepository.count();

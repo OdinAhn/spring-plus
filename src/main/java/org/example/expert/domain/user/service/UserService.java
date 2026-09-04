@@ -20,7 +20,10 @@ public class UserService {
 
     public UserResponse getUser(long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new InvalidRequestException("User not found"));
-        return new UserResponse(user.getId(), user.getEmail());
+        return UserResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .build();
     }
 
     @Transactional

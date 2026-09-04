@@ -7,7 +7,21 @@ public class SignupResponse {
 
     private final String bearerToken;
 
-    public SignupResponse(String bearerToken) {
-        this.bearerToken = bearerToken;
+    private SignupResponse(Builder builder) {
+        this.bearerToken = builder.bearerToken;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String bearerToken;
+
+        public Builder bearerToken(String bearerToken) { this.bearerToken = bearerToken; return this; }
+
+        public SignupResponse build() {
+            return new SignupResponse(this);
+        }
     }
 }

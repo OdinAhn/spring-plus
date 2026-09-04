@@ -2,14 +2,12 @@ package org.example.expert.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.example.expert.domain.user.entity.User;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
 public class ChatMessage {
 
     @Id
@@ -26,10 +24,31 @@ public class ChatMessage {
 
     private LocalDateTime createdAt;
 
-    public ChatMessage(User sender, ChatRoom chatRoom, String content) {
-        this.sender = sender;
-        this.chatRoom = chatRoom;
-        this.content = content;
+    protected ChatMessage() {
+    }
+
+    private ChatMessage(Builder builder) {
+        this.sender = builder.sender;
+        this.chatRoom = builder.chatRoom;
+        this.content = builder.content;
         this.createdAt = LocalDateTime.now();
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private User sender;
+        private ChatRoom chatRoom;
+        private String content;
+
+        public Builder sender(User sender) { this.sender = sender; return this; }
+        public Builder chatRoom(ChatRoom chatRoom) { this.chatRoom = chatRoom; return this; }
+        public Builder content(String content) { this.content = content; return this; }
+
+        public ChatMessage build() {
+            return new ChatMessage(this);
+        }
     }
 }

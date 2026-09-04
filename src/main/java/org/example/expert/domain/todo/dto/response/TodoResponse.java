@@ -16,13 +16,39 @@ public class TodoResponse {
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public TodoResponse(Long id, String title, String contents, String weather, UserResponse user, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        this.id = id;
-        this.title = title;
-        this.contents = contents;
-        this.weather = weather;
-        this.user = user;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
+    private TodoResponse(Builder builder) {
+        this.id = builder.id;
+        this.title = builder.title;
+        this.contents = builder.contents;
+        this.weather = builder.weather;
+        this.user = builder.user;
+        this.createdAt = builder.createdAt;
+        this.modifiedAt = builder.modifiedAt;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Long id;
+        private String title;
+        private String contents;
+        private String weather;
+        private UserResponse user;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+
+        public Builder id(Long id) { this.id = id; return this; }
+        public Builder title(String title) { this.title = title; return this; }
+        public Builder contents(String contents) { this.contents = contents; return this; }
+        public Builder weather(String weather) { this.weather = weather; return this; }
+        public Builder user(UserResponse user) { this.user = user; return this; }
+        public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
+        public Builder modifiedAt(LocalDateTime modifiedAt) { this.modifiedAt = modifiedAt; return this; }
+
+        public TodoResponse build() {
+            return new TodoResponse(this);
+        }
     }
 }

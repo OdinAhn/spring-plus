@@ -43,8 +43,8 @@ class TodoServiceTest {
         int size = 10;
 
         List<TodoSearchResponse> list = List.of(
-                new TodoSearchResponse("팀 주간 회의", 3L, 5L),
-                new TodoSearchResponse("프로젝트 킥오프 회의", 2L, 0L)
+                TodoSearchResponse.builder().title("팀 주간 회의").managerCount(3L).commentCount(5L).build(),
+                TodoSearchResponse.builder().title("프로젝트 킥오프 회의").managerCount(2L).commentCount(0L).build()
         );
         Page<TodoSearchResponse> expectedPage = new PageImpl<>(list, PageRequest.of(0, 10), list.size());
 

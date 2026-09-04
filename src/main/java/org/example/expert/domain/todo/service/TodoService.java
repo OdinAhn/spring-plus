@@ -34,21 +34,21 @@ public class TodoService {
 
         String weather = weatherClient.getTodayWeather();
 
-        Todo newTodo = new Todo(
-                todoSaveRequest.getTitle(),
-                todoSaveRequest.getContents(),
-                weather,
-                user
-        );
+        Todo newTodo = Todo.builder()
+                .title(todoSaveRequest.getTitle())
+                .contents(todoSaveRequest.getContents())
+                .weather(weather)
+                .user(user)
+                .build();
         Todo savedTodo = todoRepository.save(newTodo);
 
-        return new TodoSaveResponse(
-                savedTodo.getId(),
-                savedTodo.getTitle(),
-                savedTodo.getContents(),
-                weather,
-                new UserResponse(user.getId(), user.getEmail())
-        );
+        return TodoSaveResponse.builder()
+                .id(savedTodo.getId())
+                .title(savedTodo.getTitle())
+                .contents(savedTodo.getContents())
+                .weather(weather)
+                .user(UserResponse.builder().id(user.getId()).email(user.getEmail()).build())
+                .build();
     }
 
     public Page<TodoResponse> getTodos(int page, int size, String weather, LocalDateTime modifiedAtFrom, LocalDateTime modifiedAtTo) {
@@ -56,15 +56,15 @@ public class TodoService {
 
         Page<Todo> todos = todoRepository.searchTodos(weather, modifiedAtFrom, modifiedAtTo, pageable);
 
-        return todos.map(todo -> new TodoResponse(
-                todo.getId(),
-                todo.getTitle(),
-                todo.getContents(),
-                todo.getWeather(),
-                new UserResponse(todo.getUser().getId(), todo.getUser().getEmail()),
-                todo.getCreatedAt(),
-                todo.getModifiedAt()
-        ));
+        return todos.map(todo -> TodoResponse.builder()
+                .id(todo.getId())
+                .title(todo.getTitle())
+                .contents(todo.getContents())
+                .weather(todo.getWeather())
+                .user(UserResponse.builder().id(todo.getUser().getId()).email(todo.getUser().getEmail()).build())
+                .createdAt(todo.getCreatedAt())
+                .modifiedAt(todo.getModifiedAt())
+                .build());
     }
 
     public TodoResponse getTodo(long todoId) {
@@ -73,15 +73,15 @@ public class TodoService {
 
         User user = todo.getUser();
 
-        return new TodoResponse(
-                todo.getId(),
-                todo.getTitle(),
-                todo.getContents(),
-                todo.getWeather(),
-                new UserResponse(user.getId(), user.getEmail()),
-                todo.getCreatedAt(),
-                todo.getModifiedAt()
-        );
+        return TodoResponse.builder()
+                .id(todo.getId())
+                .title(todo.getTitle())
+                .contents(todo.getContents())
+                .weather(todo.getWeather())
+                .user(UserResponse.builder().id(user.getId()).email(user.getEmail()).build())
+                .createdAt(todo.getCreatedAt())
+                .modifiedAt(todo.getModifiedAt())
+                .build();
     }
 
     public Page<TodoSearchResponse> searchTodos(

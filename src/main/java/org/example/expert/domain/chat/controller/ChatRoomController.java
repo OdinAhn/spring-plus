@@ -21,7 +21,7 @@ public class ChatRoomController {
 
     @PostMapping
     public ChatRoom create(@RequestParam String name) {
-        ChatRoom room = new ChatRoom(name);
+        ChatRoom room = ChatRoom.builder().name(name).build();
         return chatRoomRepository.save(room);
     }
 }

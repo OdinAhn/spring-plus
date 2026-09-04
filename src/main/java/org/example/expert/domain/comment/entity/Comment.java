@@ -2,14 +2,12 @@ package org.example.expert.domain.comment.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.example.expert.domain.common.entity.Timestamped;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.user.entity.User;
 
 @Getter
 @Entity
-@NoArgsConstructor
 @Table(name = "comments")
 public class Comment extends Timestamped {
 
@@ -25,9 +23,30 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "todo_id", nullable = false)
     private Todo todo;
 
-    public Comment(String contents, User user, Todo todo) {
-        this.contents = contents;
-        this.user = user;
-        this.todo = todo;
+    protected Comment() {
+    }
+
+    private Comment(Builder builder) {
+        this.contents = builder.contents;
+        this.user = builder.user;
+        this.todo = builder.todo;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String contents;
+        private User user;
+        private Todo todo;
+
+        public Builder contents(String contents) { this.contents = contents; return this; }
+        public Builder user(User user) { this.user = user; return this; }
+        public Builder todo(Todo todo) { this.todo = todo; return this; }
+
+        public Comment build() {
+            return new Comment(this);
+        }
     }
 }

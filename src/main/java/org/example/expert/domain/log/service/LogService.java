@@ -15,7 +15,14 @@ public class LogService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveLog(String action, Long requesterUserId, Long targetUserId, Long todoId, String status, String message) {
-        Log log = new Log(action, requesterUserId, targetUserId, todoId, status, message);
+        Log log = Log.builder()
+                .action(action)
+                .requesterUserId(requesterUserId)
+                .targetUserId(targetUserId)
+                .todoId(todoId)
+                .status(status)
+                .message(message)
+                .build();
         logRepository.save(log);
     }
 }

@@ -35,17 +35,17 @@ public class AuthService {
 
         UserRole userRole = UserRole.of(signupRequest.getUserRole());
 
-        User newUser = new User(
-                signupRequest.getEmail(),
-                encodedPassword,
-                signupRequest.getNickname(),
-                userRole
-        );
+        User newUser = User.builder()
+                .email(signupRequest.getEmail())
+                .password(encodedPassword)
+                .nickname(signupRequest.getNickname())
+                .userRole(userRole)
+                .build();
         User savedUser = userRepository.save(newUser);
 
         String bearerToken = jwtUtil.createToken(savedUser.getId(), savedUser.getEmail(), savedUser.getNickname(), userRole);
 
-        return new SignupResponse(bearerToken);
+        return SignupResponse.builder().bearerToken(bearerToken).build();
     }
 
     public SigninResponse signin(SigninRequest signinRequest) {
@@ -59,6 +59,6 @@ public class AuthService {
 
         String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getNickname(), user.getUserRole());
 
-        return new SigninResponse(bearerToken);
+        return SigninResponse.builder().bearerToken(bearerToken).build();
     }
 }

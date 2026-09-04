@@ -51,7 +51,7 @@ public class ManagerService {
                 throw new InvalidRequestException("일정 작성자는 본인을 담당자로 등록할 수 없습니다.");
             }
 
-            Manager newManager = new Manager(managerUser, todo);
+            Manager newManager = Manager.builder().user(managerUser).todo(todo).build();
             Manager savedManager = managerRepository.save(newManager);
 
             logService.saveLog(
@@ -63,10 +63,10 @@ public class ManagerService {
                     "매니저 등록 성공"
             );
 
-            return new ManagerSaveResponse(
-                    savedManager.getId(),
-                    new UserResponse(managerUser.getId(), managerUser.getEmail())
-            );
+            return ManagerSaveResponse.builder()
+                    .id(savedManager.getId())
+                    .user(UserResponse.builder().id(managerUser.getId()).email(managerUser.getEmail()).build())
+                    .build();
 
         } catch (Exception e) {
             // 등록 실패 시에도 로그는 독립적인 트랜잭션(REQUIRES_NEW)으로 즉시 커밋
@@ -93,10 +93,10 @@ public class ManagerService {
         List<ManagerResponse> dtoList = new ArrayList<>();
         for (Manager manager : managerList) {
             User user = manager.getUser();
-            dtoList.add(new ManagerResponse(
-                    manager.getId(),
-                    new UserResponse(user.getId(), user.getEmail())
-            ));
+            dtoList.add(ManagerResponse.builder()
+                    .id(manager.getId())
+                    .user(UserResponse.builder().id(user.getId()).email(user.getEmail()).build())
+                    .build());
         }
         return dtoList;
     }
