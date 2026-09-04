@@ -5,10 +5,13 @@ import org.example.expert.config.PasswordEncoder;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
 import org.example.expert.domain.user.dto.response.UserResponse;
+import org.example.expert.domain.user.dto.response.UserSearchResponse;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,16 @@ public class UserService {
                 .id(user.getId())
                 .email(user.getEmail())
                 .build();
+    }
+
+    public List<UserSearchResponse> searchByNickname(String nickname) {
+        return userRepository.findByNickname(nickname).stream()
+                .map(user -> UserSearchResponse.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .nickname(user.getNickname())
+                        .build())
+                .toList();
     }
 
     @Transactional

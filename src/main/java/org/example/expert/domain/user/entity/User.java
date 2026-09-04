@@ -8,7 +8,7 @@ import org.example.expert.domain.user.enums.UserRole;
 
 @Getter
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = @Index(name = "idx_user_nickname", columnList = "nickname"))
 public class User extends Timestamped {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
